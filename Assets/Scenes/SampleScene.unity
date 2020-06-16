@@ -248,7 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rayTracingShader: {fileID: 7200000, guid: 355088ddbc6ffaf4ea2b06b6c08b8f5c, type: 3}
   _directionalLight: {fileID: 216918888}
-  _skyboxTexture: {fileID: 8900000, guid: 3e80b688af9b1d84ea52c5d36bb1cbbd, type: 3}
+  _skyboxTexture: {fileID: 2800000, guid: 1153dc89e66880c4eb7adc16ba588855, type: 3}
   _radiusRange: {x: 3, y: 8}
   _spheresCount: 100
   _spherePlacementRadius: 100
@@ -329,8 +329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecd4d689606098c438a39e07b1e95bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 10
-  _rotationSpeed: 3
+  _moveSpeed: 25
+  _rotationSpeed: 10
 --- !u!54 &2004059072
 Rigidbody:
   m_ObjectHideFlags: 0

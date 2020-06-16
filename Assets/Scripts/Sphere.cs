@@ -6,9 +6,12 @@ public struct Sphere
     public float Radius;
     public Vector3 Albedo;
     public Vector3 Specular;
+    public float Speed;
+    public float Amplitude;
 
-    public void SetPosition(Vector3 pos)
+    public static int GetSize()
     {
-        Position = pos;
+        var floatSize = sizeof(float);
+        return floatSize * 3 + floatSize + floatSize * 3 + floatSize * 3 + floatSize + floatSize;
     }
 }

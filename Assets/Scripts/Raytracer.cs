@@ -40,6 +40,7 @@ public class Raytracer : MonoBehaviour
 
     private void SetupScene()
     {
+        _spheres.Clear();
         for (int i = 0; i < _spheresCount; i++)
         {
             var sphere = new Sphere();
@@ -61,6 +62,10 @@ public class Raytracer : MonoBehaviour
             sphere.Albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b);
             sphere.Specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f;
 
+            //Speed and amplitude
+            sphere.Speed = Random.Range(0.1f, 5f);
+            sphere.Amplitude = Random.Range(0.1f, 15f);
+
             // Add the sphere to the list
             _spheres.Add(sphere);
         }
@@ -77,12 +82,12 @@ public class Raytracer : MonoBehaviour
         }
         if (_sphereBuffer == null)
         {
-            _sphereBuffer = new ComputeBuffer(_spheres.Count, 40);
+            _sphereBuffer = new ComputeBuffer(_spheres.Count, Sphere.GetSize());
         }
         _sphereBuffer.SetData(_spheres);
     }
 
-    private bool IsSphereIntersectsOther(List<Sphere>  spheres, Sphere sphere)
+    private bool IsSphereIntersectsOther(List<Sphere> spheres, Sphere sphere)
     {
         foreach (Sphere other in spheres)
         {
@@ -108,21 +113,6 @@ public class Raytracer : MonoBehaviour
             _currentSample = 0;
             transform.hasChanged = false;
         }
-
-        MoveSpheres();
-    }
-
-    private void MoveSpheres()
-    {
-        for (int i = 0; i < _spheres.Count; i++)
-        {
-            var pos = _spheres[i].Position;
-            if(i == 3)
-            pos.y = Mathf.Sin(Time.time) * Random.Range(1f, 4f);
-            Debug.LogError(pos);
-            _spheres[i].SetPosition(pos);
-        }
-        PassSpheres();
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -177,5 +167,7 @@ public class Raytracer : MonoBehaviour
         {
             _rayTracingShader.SetBuffer(0, "_Spheres", _sphereBuffer);
         }
+
+        _rayTracingShader.SetFloat("_Time", Time.time);
     }
 }
