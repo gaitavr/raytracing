@@ -58,7 +58,7 @@ public class Raytracer : MonoBehaviour
 
             // Albedo and specular color
             Color color = Random.ColorHSV();
-            bool metal = Random.value < 0.5f;
+            bool metal = Random.value < 0.8f;
             sphere.Albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b);
             sphere.Specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f;
 
