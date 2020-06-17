@@ -10,13 +10,8 @@ public class Raytracer : MonoBehaviour
     private Light _directionalLight;
     [SerializeField]
     private Texture _skyboxTexture;
-
-    private RenderTexture _target;
-    private Camera _camera;
-
-    private uint _currentSample;
-    private Material _addMaterial;
-
+    [SerializeField, Range(1f, 8f)]
+    private int _reflectionsCount = 4;
     [SerializeField]
     private Vector2 _radiusRange = new Vector2(3.0f, 8.0f);
     [SerializeField]
@@ -24,8 +19,14 @@ public class Raytracer : MonoBehaviour
     [SerializeField]
     private float _spherePlacementRadius = 100f;
 
+    private RenderTexture _target;
+    private Camera _camera;
+
+    private uint _currentSample;
+    private Material _addMaterial;
+
     private ComputeBuffer _sphereBuffer;
-    private List<Sphere> _spheres = new List<Sphere>();
+    private readonly List<Sphere> _spheres = new List<Sphere>();
 
     private void Awake()
     {
@@ -169,5 +170,6 @@ public class Raytracer : MonoBehaviour
         }
 
         _rayTracingShader.SetFloat("_Time", Time.time);
+        _rayTracingShader.SetInt("_ReflectionsCount", _reflectionsCount);
     }
 }
