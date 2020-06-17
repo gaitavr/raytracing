@@ -227,7 +227,6 @@ GameObject:
   - component: {fileID: 2004059072}
   - component: {fileID: 2004059071}
   - component: {fileID: 2004059067}
-  - component: {fileID: 2004059073}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -250,9 +249,10 @@ MonoBehaviour:
   _rayTracingShader: {fileID: 7200000, guid: 355088ddbc6ffaf4ea2b06b6c08b8f5c, type: 3}
   _directionalLight: {fileID: 216918888}
   _skyboxTexture: {fileID: 2800000, guid: 90196f2c2d8d2f2448717676e1a09894, type: 3}
-  _radiusRange: {x: 3, y: 10}
-  _spheresCount: 100
-  _spherePlacementRadius: 50
+  _reflectionsCount: 4
+  _radiusRange: {x: 2, y: 10}
+  _spheresCount: 1000
+  _spherePlacementRadius: 100
 --- !u!81 &2004059068
 AudioListener:
   m_ObjectHideFlags: 0
@@ -348,15 +348,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2004059073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2004059066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9427b90baff34e49beb1d0b56708742, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
