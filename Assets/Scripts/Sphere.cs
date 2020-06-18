@@ -12,6 +12,7 @@ public struct Sphere
     public static int GetSize()
     {
         var floatSize = sizeof(float);
-        return floatSize * 3 + floatSize + floatSize * 3 + floatSize * 3 + floatSize + floatSize;
+        return floatSize * 3 + floatSize + floatSize * 3 + floatSize * 3 + 
+               floatSize + floatSize;
     }
 }

@@ -22,9 +22,6 @@ public class Raytracer : MonoBehaviour
     private RenderTexture _target;
     private Camera _camera;
 
-    private uint _currentSample;
-    private Material _addMaterial;
-
     private ComputeBuffer _sphereBuffer;
     private readonly List<Sphere> _spheres = new List<Sphere>();
 
@@ -35,7 +32,6 @@ public class Raytracer : MonoBehaviour
 
     private void OnEnable()
     {
-        _currentSample = 0;
         SetupScene();
     }
 
@@ -93,7 +89,8 @@ public class Raytracer : MonoBehaviour
         foreach (Sphere other in spheres)
         {
             float minDist = sphere.Radius + other.Radius;
-            if (Vector3.SqrMagnitude(sphere.Position - other.Position) < minDist * minDist)
+            if (Vector3.SqrMagnitude(sphere.Position - other.Position) < 
+                minDist * minDist)
             {
                 return true;
             }
@@ -105,15 +102,6 @@ public class Raytracer : MonoBehaviour
     private void OnDisable()
     {
         _sphereBuffer?.Release();
-    }
-
-    private void Update()
-    {
-        if (transform.hasChanged)
-        {
-            _currentSample = 0;
-            transform.hasChanged = false;
-        }
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -131,25 +119,17 @@ public class Raytracer : MonoBehaviour
         int threadGroupsY = Mathf.CeilToInt(Screen.height / 8.0f);
         _rayTracingShader.Dispatch(0, threadGroupsX, threadGroupsY, 1);
 
-        if (_addMaterial == null)
-        {
-            _addMaterial = new Material(Shader.Find("Hidden/AddShader"));
-        }
-        _addMaterial.SetFloat("_Sample", _currentSample);
-        Graphics.Blit(_target, destination, _addMaterial);
-        _currentSample++;
+        Graphics.Blit(_target, destination);
     }
 
     private void Init()
     {
         if (_target == null || _target.width != Screen.width || _target.height != Screen.height)
         {
-            _currentSample = 0;
-
             _target?.Release();
 
-            _target = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.ARGBFloat,
-                RenderTextureReadWrite.Linear);
+            _target = new RenderTexture(Screen.width, Screen.height, 0, 
+                RenderTextureFormat.ARGBFloat);
             _target.enableRandomWrite = true;
             _target.Create();
         }
@@ -160,7 +140,7 @@ public class Raytracer : MonoBehaviour
         _rayTracingShader.SetMatrix("_CameraToWorld", _camera.cameraToWorldMatrix);
         _rayTracingShader.SetMatrix("_CameraInverseProjection", _camera.projectionMatrix.inverse);
         _rayTracingShader.SetTexture(0, "_SkyboxTexture", _skyboxTexture);
-        _rayTracingShader.SetVector("_PixelOffset", new Vector2(Random.value, Random.value));
+        _rayTracingShader.SetInt("_ReflectionsCount", _reflectionsCount);
 
         Vector3 dir = _directionalLight.transform.forward;
         _rayTracingShader.SetVector("_DirectionalLight", new Vector4(dir.x, dir.y, dir.z, _directionalLight.intensity));
@@ -170,6 +150,5 @@ public class Raytracer : MonoBehaviour
         }
 
         _rayTracingShader.SetFloat("_Time", Time.time);
-        _rayTracingShader.SetInt("_ReflectionsCount", _reflectionsCount);
     }
 }

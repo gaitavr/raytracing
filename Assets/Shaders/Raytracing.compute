@@ -7,7 +7,6 @@ float4x4 _CameraInverseProjection;
 
 float4 _DirectionalLight;
 
-float2 _PixelOffset;
 int _ReflectionsCount;
 
 Texture2D<float4> _SkyboxTexture;
@@ -167,8 +166,8 @@ float3 Shade(inout Ray ray, RayHit hit)
 		ray.energy *= hit.specular;
 
 		// Shadow test ray
-		bool shadow = false;
-		Ray shadowRay = CreateRay(hit.position + hit.normal * 0.001f, -1 * _DirectionalLight.xyz);
+		Ray shadowRay = CreateRay(hit.position + hit.normal * 0.001f, 
+            -1 * _DirectionalLight.xyz);
 		RayHit shadowHit = Trace(shadowRay);
 		if (shadowHit.distance != 1.#INF)
 		{
@@ -176,7 +175,8 @@ float3 Shade(inout Ray ray, RayHit hit)
 		}
 
 		// Return a diffuse-shaded color
-		return saturate(dot(hit.normal, _DirectionalLight.xyz) * -1) * _DirectionalLight.w * hit.albedo;
+		return saturate(dot(hit.normal, _DirectionalLight.xyz) * -1) 
+            * _DirectionalLight.w * hit.albedo;
 	}
 	else
 	{
@@ -186,7 +186,8 @@ float3 Shade(inout Ray ray, RayHit hit)
 		// Sample the skybox and write it
 		float theta = acos(ray.direction.y) / -PI;
 		float phi = atan2(ray.direction.x, -ray.direction.z) / -PI * 0.5f;
-		return _SkyboxTexture.SampleLevel(sampler_SkyboxTexture, float2(phi, theta), 0).xyz * 1.8f;
+		return _SkyboxTexture.SampleLevel(sampler_SkyboxTexture, 
+            float2(phi, theta), 0).xyz;
 	}
 }
 
@@ -202,7 +203,8 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	Result.GetDimensions(width, height);
 
 	// Transform pixel to [-1,1] range
-	float2 uv = float2((id.xy + _PixelOffset) / float2(width, height) * 2.0f - 1.0f);
+    float2 uv = float2((id.xy + float2(0.5f, 0.5f)) / float2(width, height) 
+        * 2.0f - 1.0f);
 
 	// Get a ray for the UVs
 	Ray ray = CreateCameraRay(uv);
